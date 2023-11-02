@@ -6,6 +6,7 @@ from fastapi import FastAPI
 class Scrapper:
     """Base Scrapper class
     """
+    session = None
 
     def __init__(self,
                  productName) -> None:
@@ -15,3 +16,17 @@ class Scrapper:
             session=self.session,
             productName=self.productName
         )
+
+    @classmethod
+    def create(cls):
+        cls.session = aiohttp.ClientSession()
+        return cls.session
+
+    @classmethod
+    def close(cls):
+        if cls.session is not None:
+            return cls.session.close()
+
+
+async def close():
+    await Scrapper.close()

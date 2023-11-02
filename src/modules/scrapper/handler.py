@@ -1,5 +1,6 @@
 from ...constants import Common
 from .extractor import Extractor
+from ...helpers import logger
 
 
 class FlipkartDataHandler:
@@ -11,16 +12,19 @@ class FlipkartDataHandler:
         return Common.FLIPKART_URL + self.productName
 
     async def _fetchHtml(self):
-        _res = await self.session.post(self.getUrl())
+        async with self.session.post(self.getUrl()) as _res:
 
-        if _res.status == 200:
-            return await _res.text()
-
-        raise InterruptedError(
-            f'got error while fetching. status_code: {_res.status}')
-        # with open('index.html') as f:
-        #     return f.read()
+            if _res.status == 200:
+                return (_res, await _res.text())
+        return None
 
     async def getFlipkartData(self):
-        _html = await self._fetchHtml()
-        return Extractor(html=_html).extractedRawDataOfDivs()
+        try:
+            _res, _html = await self._fetchHtml()
+            if _res.status != 200:
+                logger.warn(
+                    f'failed to fetch html. Status code: {_res.status}')
+            return Extractor(html=_html).extractedRawDataOfDivs()
+        except Exception as e:
+            logger.critical(msg='failed to get html. needed a restart')
+            return {}
