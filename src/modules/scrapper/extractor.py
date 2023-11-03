@@ -78,33 +78,79 @@ class BaseExtractor:
 
     def _getRating(self):
 
-        # find all the rating tags
+        # finding the rating tag
         try:
             ratingTag = self._html.find_all(
                 'div', class_=FLIPKART_PRODUCT_RATING)
+        # if unable to find rating tag return None
         except Exception as e:
             ratingTag = None
 
+        # if ratingTag isn't none return the text within it
         if ratingTag:
             return ratingTag[0].get_text()
+        # else return None
         return ratingTag
 
+    def _getTotalReviewsAndRatingCount(self):
+
+        # find the raw span elements
+        try:
+            countSpans = self._html \
+                .find('div', class_='gUuXy-') \
+                .find('span', class_='_2_R_DZ') \
+                .find('span')       \
+                .find_all('span')
+        except Exception as e:
+            countSpans = []
+
+        # extract the text from the raw tags and add it into extractedString
+        extractedString = ''
+
+        # iterating over countSpans
+        for rawTag in countSpans:
+            # removing unused spaces and keywords
+            extractedString += rawTag.get_text().strip().replace('&nbsp;',' ') + ' '
+
+        # check if the extractedString is empty or not
+        if len(extractedString):
+            return extractedString
+
+        # if extractedString is empty return None
+        else:
+            return None
+
+
+
+
     def _getProductImg(self):
+        # find the img tag of the product
         try:
             imgTag = self._html.find('img', class_=FLIPKART_PRODUCT_IMG)
+        # in case it's not able to find the product imgTag is  None
         except Exception as e:
             imgTag = None
+
+        # if imgTag is not none return the src url of the img tag
+        # src tag will be url of the image
+
         if imgTag:
             return imgTag['src']
+
+        # if imgTag is None return None
+
         return imgTag
 
     def getData(self):
+
+        # return the data if any of the field failed to find the data it will be shipped with None value
         return {
             'title': self._getTitle(),
             'price': self._getPrice(),
             'descriptionList': self._getDescriptionList(),
             'rating': self._getRating(),
-            'productImage': self._getProductImg()
+            'productImage': self._getProductImg(),
+            'total_rating': self._getTotalReviewsAndRatingCount(),
         }
 
 
@@ -114,19 +160,30 @@ class Extractor:
 
     def __init__(self, html) -> None:
         self._html = html
-        # print(self._html)
+        # create a soup obj
         self._soup = BeautifulSoup(str(self._html), 'html.parser')
 
     def getAllDivs(self):
+        # find all the div of the products
         try:
             divs = self._soup.find_all('div', class_=FLIPKART_PRODUCT_DIV)
+        # in case it failed to find the divs return a empty list
         except Exception as e:
             logger.warn(e)
             return []
+
+        # slicing the list by filter divs and footer div at last
         return divs[2:-1]
 
-    def extractedRawDataOfDivs(self):
+    def extractedDataOfDivs(self):
+
+        # _data is the dict of values
         _data = {}
+
+        # iterating over the divs
         for i, html in enumerate(self.getAllDivs()):
+            # fetching the data and storing it in _data dict with key as index
             _data[i] = BaseExtractor(html).getData()
+
+        # return the evaluated dict maybe with data or empty
         return _data
