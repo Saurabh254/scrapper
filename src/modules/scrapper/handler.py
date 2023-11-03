@@ -26,5 +26,5 @@ class FlipkartDataHandler:
                     f'failed to fetch html. Status code: {_res.status}')
             return Extractor(html=_html).extractedRawDataOfDivs()
         except Exception as e:
-            logger.critical(msg='failed to get html. needed a restart')
+            logger.critical(msg=f'failed to get html. needed a restart.{e}')
             return {}

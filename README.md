@@ -117,11 +117,13 @@ Give an example
 
 ## 🎈 Usage <a name="usage"></a>
 
-Add notes about how to use the system.
+GET request at
+
+> http://127.0.0.1:8000/{ProductName}
 
 ## 🚀 Deployment <a name = "deployment"></a>
 
-Add additional notes about how to deploy this on a live system.
+Follow the installing instuction on the host machine
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
