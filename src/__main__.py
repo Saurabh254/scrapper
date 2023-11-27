@@ -13,6 +13,7 @@ async def productData(productName: str, request: Request):
     scrapperObj = Scrapper(productName=productName)
     jsonData = await scrapperObj.flipkartScrapper.getFlipkartData()
     await scrapperObj.session.close()
+    logger.info("GET request processed: User:", request.client.host)
     return {
         "client_host": request.client.host,
         "data": jsonData
