@@ -1,5 +1,7 @@
 import logging
 from ._logger import CustomFormatter
+from .db import cur, conn
+from .mics import generateProductId
 
 
 # create logger with 'logging.py'
@@ -15,4 +17,8 @@ ch.setFormatter(CustomFormatter())
 logger.addHandler(ch)
 
 
-__all__ = [logger]
+__all__ = [
+    logger,
+    cur,
+    conn
+]

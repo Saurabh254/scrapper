@@ -9,12 +9,16 @@ class Scrapper:
     session = None
 
     def __init__(self,
-                 productName) -> None:
+                 productName,
+                 dbCursor,
+                 dbConnection) -> None:
         self.session = aiohttp.ClientSession()
         self.productName = productName
         self.flipkartScrapper = FlipkartDataHandler(
             session=self.session,
-            productName=self.productName
+            productName=self.productName,
+            dbCursor=dbCursor,
+            dbConnection=dbConnection
         )
 
     @classmethod

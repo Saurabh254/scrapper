@@ -110,7 +110,7 @@ class BaseExtractor:
         # iterating over countSpans
         for rawTag in countSpans:
             # removing unused spaces and keywords
-            extractedString += rawTag.get_text().strip().replace('&nbsp;',' ') + ' '
+            extractedString += rawTag.get_text().strip().replace('&nbsp;', ' ') + ' '
 
         # check if the extractedString is empty or not
         if len(extractedString):
@@ -119,9 +119,6 @@ class BaseExtractor:
         # if extractedString is empty return None
         else:
             return None
-
-
-
 
     def _getProductImg(self):
         # find the img tag of the product
@@ -175,7 +172,7 @@ class Extractor:
         # slicing the list by filter divs and footer div at last
         return divs[2:-1]
 
-    def extractedDataOfDivs(self):
+    def extractedDataOfDivs(self) -> dict:
 
         # _data is the dict of values
         _data = {}

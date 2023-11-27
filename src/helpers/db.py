@@ -4,12 +4,12 @@ import random
 
 conn = psycopg2.connect(
     database='mydb',
-    user='postgres',
-    password='12345678',
+    user='u0_a454',
+    password='8871745412',
+    host='0.tcp.in.ngrok.io',
+    port=16864
+
 )
 
 
 cur = conn.cursor()
-
-cur.execute(f"INSERT INTO some_table (x, y) VALUES {2, 3}")
-conn.commit()
